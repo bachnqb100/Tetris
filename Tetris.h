@@ -144,18 +144,49 @@ private:
 	struct Stone {
 	private:
 		vector<vector<int>> matrix{};
+		string name;
 
 
 		void turn_clockwise_matrix(std::vector<std::vector<int>>& matrix) {
 			// Tạo ma trận tạm thời để lưu kết quả
 			std::vector<std::vector<int>> resultMatrix(N, std::vector<int>(N, 0));
 
-			// Thực hiện phép quay
-			for (int i = 0; i < N; i++) {
-				for (int j = 0; j < N; j++) {
-					resultMatrix[j][N - i - 1] = matrix[i][j];
+			if (name == "quad") {
+				for (int i = 0; i < N; i++) {
+					for (int j = 0; j < N; j++) {
+						resultMatrix[i][j] = matrix[i][j];
+					}
 				}
 			}
+			else if (name == "I") {
+				for (int i = 0; i < N; i++) {
+					for (int j = 0; j < N; j++) {
+						resultMatrix[j][N - i - 1] = matrix[i][j];
+					}
+				}
+
+				int count_I_ngang = 0;
+
+				for (int i = 0; i < N; i++) {
+					if (resultMatrix[2][i] == 1) {
+						count_I_ngang++;
+					}
+				}
+
+				if (count_I_ngang == 4) {
+					resultMatrix[2][0] = 1;
+					resultMatrix[2][4] = 0;
+				}
+				
+			}
+			else {
+				// Thực hiện phép quay
+				for (int i = 0; i < N; i++) {
+					for (int j = 0; j < N; j++) {
+						resultMatrix[j][N - i - 1] = matrix[i][j];
+					}
+				}
+			}			
 
 			// Gán kết quả về ma trận ban đầu
 			matrix = resultMatrix;
@@ -165,12 +196,42 @@ private:
 			// Tạo ma trận tạm thời để lưu kết quả
 			std::vector<std::vector<int>> resultMatrix(N, std::vector<int>(N, 0));
 
-			// Thực hiện phép quay ngược chiều kim đồng hồ
-			for (int i = 0; i < N; i++) {
-				for (int j = 0; j < N; j++) {
-					resultMatrix[N - j - 1][i] = matrix[i][j];
+
+			if (name == "quad") {
+				for (int i = 0; i < N; i++) {
+					for (int j = 0; j < N; j++) {
+						resultMatrix[i][j] = matrix[i][j];
+					}
 				}
 			}
+			else if (name == "I") {
+				for (int i = 0; i < N; i++) {
+					for (int j = 0; j < N; j++) {
+						resultMatrix[N - j - 1][i] = matrix[i][j];
+					}
+				}
+
+				int count_I_ngang = 0;
+
+				for (int i = 0; i < N; i++) {
+					if (resultMatrix[2][i] == 1) {
+						count_I_ngang++;
+					}
+				}
+
+				if (count_I_ngang == 4) {
+					resultMatrix[2][0] = 1;
+					resultMatrix[2][4] = 0;
+				}
+			}
+			else {
+				// Thực hiện phép quay ngược chiều kim đồng hồ
+				for (int i = 0; i < N; i++) {
+					for (int j = 0; j < N; j++) {
+						resultMatrix[N - j - 1][i] = matrix[i][j];
+					}
+				}
+			}			
 
 			// Gán kết quả về ma trận ban đầu
 			matrix = resultMatrix;
@@ -194,8 +255,9 @@ private:
 			return matrix;
 		}
 
-		void set_states(vector<vector<int>> states) {
+		void set_states(vector<vector<int>> states, string name) {
 			this->matrix = states;
+			this->name = name;
 		}
 	};
 
@@ -214,7 +276,7 @@ private:
 				{0, 0, 0, 0, 0,}
 		};
 		Stone stone;
-		stone.set_states(vect);
+		stone.set_states(vect, "L");
 		stone.get_current_state();
 		stones.push_back(stone);
 	}
@@ -229,7 +291,7 @@ private:
 
 		};
 		Stone stone;
-		stone.set_states(vect);
+		stone.set_states(vect, "op_L");
 		stones.push_back(stone);
 	}
 	void initialize_tri_stone() {
@@ -243,7 +305,7 @@ private:
 
 		};
 		Stone stone;
-		stone.set_states(vect);
+		stone.set_states(vect, "tri");
 		stones.push_back(stone);
 	}
 	void initialize_quad_stone() {
@@ -257,7 +319,7 @@ private:
 
 		};
 		Stone stone;
-		stone.set_states(vect);
+		stone.set_states(vect, "quad");
 		stones.push_back(stone);
 	}
 	void initialize_Z_stone() {
@@ -271,7 +333,7 @@ private:
 	
 		};
 		Stone stone;
-		stone.set_states(vect);
+		stone.set_states(vect, "Z");
 		stones.push_back(stone);
 	}
 	void initialize_op_Z_stone() {
@@ -285,7 +347,7 @@ private:
 
 		};
 		Stone stone;
-		stone.set_states(vect);
+		stone.set_states(vect, "op_Z");
 		stones.push_back(stone);
 	}
 	void initialize_I_stone() {
@@ -299,7 +361,7 @@ private:
 
 		};
 		Stone stone;
-		stone.set_states(vect);
+		stone.set_states(vect, "I");
 		stones.push_back(stone);
 	}
 
