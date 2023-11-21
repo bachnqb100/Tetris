@@ -13,6 +13,7 @@
 
 using namespace std;
 
+
 Tetris t;
 static int counter = 0;
 
@@ -41,12 +42,12 @@ string mfs =
 "}                                      \n";
 
 inline int vindex(int row, int column) {
-    return row * 10 + column;
+    return row * COL + column;
 }
 
 void define_vertices(vector<float>& vertices) {
 
-    for (int i = 0; i < 4 * 200; i++) {
+    for (int i = 0; i < 4 * ROW * COL; i++) {
         int indeks = 6 * i;
 
         //vertices[indeks + 3] = 0.5 + (1 + std::sin(i / 10)) / 2;//red
@@ -62,45 +63,45 @@ void define_vertices(vector<float>& vertices) {
     float x_scale = 2.0 / 5.0;
     float y_scale = 0.9;
 
-    for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 10; j++) {
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COL; j++) {
 
-            int indeks = (i * 10 + j) * 4 * 6;
+            int indeks = (i * COL + j) * 4 * 6;
 
-            vertices[indeks + 2] = 0; //depth
+            vertices[indeks + 2] = 0; //z
             vertices[indeks + 1] = (-1 + 0.1 * i + 0.01) * y_scale; //y
             vertices[indeks] = (-1 + 0.2 * j + 0.01) * x_scale; //x
 
         }
     }
-    for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 10; j++) {
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COL; j++) {
 
-            int indeks = ((i * 10 + j) * 4 + 1) * 6;
+            int indeks = ((i * COL + j) * 4 + 1) * 6;
 
-            vertices[indeks + 2] = 0; //depth
+            vertices[indeks + 2] = 0; //z
             vertices[indeks + 1] = (-1 + 0.1 * i + 0.01) * y_scale; //y
             vertices[indeks] = (-1 + 0.2 * j + 0.2 - 0.01) * x_scale; //x
 
         }
     }
-    for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 10; j++) {
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COL; j++) {
 
-            int indeks = ((i * 10 + j) * 4 + 2) * 6;
+            int indeks = ((i * COL + j) * 4 + 2) * 6;
 
-            vertices[indeks + 2] = 0; //depth
+            vertices[indeks + 2] = 0; //z
             vertices[indeks + 1] = (-1 + 0.1 * (i + 1) - 0.01) * y_scale; //y
             vertices[indeks] = (-1 + 0.2 * j + 0.2 - 0.01) * x_scale; //x
 
         }
     }
-    for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 10; j++) {
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COL; j++) {
 
-            int indeks = ((i * 10 + j) * 4 + 3) * 6;
+            int indeks = ((i * COL + j) * 4 + 3) * 6;
 
-            vertices[indeks + 2] = 0; //depth
+            vertices[indeks + 2] = 0; //z
             vertices[indeks + 1] = (-1 + 0.1 * (i + 1) - 0.01) * y_scale; //y
             vertices[indeks] = (-1 + 0.2 * j + 0.01) * x_scale; //x
 
@@ -125,45 +126,45 @@ void define_vertices_table(vector<float>& vertices) {
     float x_scale = 2.0 / 5.0;
     float y_scale = 0.9;
 
-    for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 10; j++) {
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COL; j++) {
 
-            int indeks = (i * 10 + j) * 4 * 6;
+            int indeks = (i * COL + j) * 4 * 6;
 
-            vertices[indeks + 2] = 0; //depth
+            vertices[indeks + 2] = 0; //z
             vertices[indeks + 1] = (-1 + 0.1 * i + 0.01) * y_scale; //y
             vertices[indeks] = (-1 + 0.2 * j + 0.01) * x_scale; //x
 
         }
     }
-    for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 10; j++) {
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COL; j++) {
 
-            int indeks = ((i * 10 + j) * 4 + 1) * 6;
+            int indeks = ((i * COL + j) * 4 + 1) * 6;
 
-            vertices[indeks + 2] = 0; //depth
+            vertices[indeks + 2] = 0; //z
             vertices[indeks + 1] = (-1 + 0.1 * i + 0.01) * y_scale; //y
             vertices[indeks] = (-1 + 0.2 * j + 0.2 - 0.01) * x_scale; //x
 
         }
     }
-    for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 10; j++) {
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COL; j++) {
 
-            int indeks = ((i * 10 + j) * 4 + 2) * 6;
+            int indeks = ((i * COL + j) * 4 + 2) * 6;
 
-            vertices[indeks + 2] = 0; //depth
+            vertices[indeks + 2] = 0; //z
             vertices[indeks + 1] = (-1 + 0.1 * (i + 1) - 0.01) * y_scale; //y
             vertices[indeks] = (-1 + 0.2 * j + 0.2 - 0.01) * x_scale; //x
 
         }
     }
-    for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 10; j++) {
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COL; j++) {
 
-            int indeks = ((i * 10 + j) * 4 + 3) * 6;
+            int indeks = ((i * COL + j) * 4 + 3) * 6;
 
-            vertices[indeks + 2] = 0; //depth
+            vertices[indeks + 2] = 0; //z
             vertices[indeks + 1] = (-1 + 0.1 * (i + 1) - 0.01) * y_scale; //y
             vertices[indeks] = (-1 + 0.2 * j + 0.01) * x_scale; //x
 
@@ -215,11 +216,9 @@ int main()
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
-    int c = 10;
 
-    vector<float> vertices(4 * 200 * 6);
-    define_vertices(vertices);
-    
+    vector<float> vertices(4 * ROW * COL * 6);
+    define_vertices(vertices);  
     
 
 
@@ -249,7 +248,7 @@ int main()
 
     //table base
 
-    vector<float> vertices_table(4 * 200 * 6);
+    vector<float> vertices_table(4 * ROW * COL * 6);
     define_vertices_table(vertices_table);
 
     unsigned int VBO1, VAO1;
@@ -295,7 +294,7 @@ int main()
         for (int i = 0; i < v_temp.size(); i++)
             for (int j = 0; j < v_temp[i].size(); j++)
                 //if (v_temp[i][j] == 1)
-                    glDrawArrays(GL_LINE_LOOP, (199 - vindex(i, j)) * 4, 4);
+                    glDrawArrays(GL_LINE_LOOP, (ROW * COL - 1 - vindex(i, j)) * 4, 4);
 
 
         glBindVertexArray(VAO);
@@ -303,7 +302,7 @@ int main()
         for (int i = 0; i < v_temp1.size(); i++)
             for (int j = 0; j < v_temp1[i].size(); j++)
                 if (v_temp1[i][j] == 1) {
-                    glDrawArrays(GL_TRIANGLE_FAN, (199 - vindex(i, j)) * 4, 4);
+                    glDrawArrays(GL_TRIANGLE_FAN, (ROW * COL - 1 - vindex(i, j)) * 4, 4);
                 }
 
 

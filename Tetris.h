@@ -4,6 +4,9 @@
 
 using namespace std;
 
+const int COL = 9;
+const int ROW = 20;
+
 
 class Tetris {
 public:
@@ -12,16 +15,22 @@ public:
 	}
 
 	void to_left() {
-		if (is_left_available())
+		if (is_left_available()) {
 			current_position.y--;
+			cout << "x: " << current_position.x << " y: " << current_position.y << endl;
+		}
 	}
 	void to_right() {
-		if (is_right_available())
-			current_position.y++;
+		if (is_right_available()) {
+			current_position.y++;			
+			cout << "x: " << current_position.x << " y: " << current_position.y << endl;
+		}
 	}
 	void to_bottom() {
-		if (is_bottom_available())
-			current_position.x++;
+		if (is_bottom_available()) {
+			current_position.x++;			
+			cout << "x: " << current_position.x << " y: " << current_position.y << endl;
+		}
 		else {
 			add_to_game_table();
 			clean();
@@ -50,11 +59,11 @@ public:
 
 	vector<vector<int>> print_game_table() {
 		vector<vector<int>> vect;
-		vect.resize(20);
-		static int t_table[20][10]{};
+		vect.resize(ROW);
+		static int t_table[ROW][COL]{};
 
-		for (int i = 0; i < 20; i++) {
-			for (int j = 0; j < 10; j++) {
+		for (int i = 0; i < ROW; i++) {
+			for (int j = 0; j < COL; j++) {
 				t_table[i][j] = table[i + 3][j + 3];
 			}
 		}
@@ -70,10 +79,10 @@ public:
 		}
 
 
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < ROW; i++) {
 			vector<int> v;
-			v.resize(10);
-			for (int j = 0; j < 10; j++) {
+			v.resize(COL);
+			for (int j = 0; j < COL; j++) {
 				v.at(j) = t_table[i][j];
 			}
 			vect[i] = v;
@@ -82,7 +91,7 @@ public:
 		return vect;
 	}
 private:
-	int table[20 + 6][10 + 6]{};
+	int table[ROW + 6][COL + 6]{};
 
 	struct Point {
 		Point() :x{}, y{} {}
@@ -415,20 +424,20 @@ private:
 	}
 
 	void initialize_game_table() {
-		for (int i = 0; i < 26; i++)
-			for (int j = 0; j < 14; j++)
+		for (int i = 0; i < ROW + 6; i++)
+			for (int j = 0; j < COL + 4; j++)
 				table[i][j] = 0;
 
-		for (int i = 23; i < 26; i++)
-			for (int j = 0; j < 14; j++)
+		for (int i = ROW + 3; i < ROW + 6; i++)
+			for (int j = 0; j < COL + 4; j++)
 				table[i][j] = 1;
 
-		for (int i = 0; i < 26; i++)
+		for (int i = 0; i < ROW + 6; i++)
 			for (int j = 0; j < 3; j++)
 				table[i][j] = 1;
 
-		for (int i = 0; i < 26; i++)
-			for (int j = 13; j < 16; j++)
+		for (int i = 0; i < ROW + 6; i++)
+			for (int j = COL + 3; j < COL + 6; j++)
 				table[i][j] = 1;
 	}
 	void initialize() {
@@ -520,7 +529,7 @@ private:
 	}
 	void create_new_stone() {
 		current_stone = stones[m_random()];
-		current_position = Point(0, 5);
+		current_position = Point(0, int(COL / 2) + 1);
 	}
 	int m_random() {
 		std::random_device dev;
@@ -530,6 +539,7 @@ private:
 		return dist6(rng);
 	}
 	void reset() {
+		std::cout << "Game Over" << endl;
 		initialize_game_table();
 		create_new_stone();
 	}
