@@ -14,6 +14,9 @@
 using namespace std;
 
 
+const int DELAY_TIME_INPUT = 100;
+
+
 Tetris t;
 static int counter = 0;
 
@@ -181,27 +184,25 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
-        t.to_left();
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {       
+        if (t.to_left()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(DELAY_TIME_INPUT));
+        }
     }
     else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
-        t.to_right();
+        if (t.to_right()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(DELAY_TIME_INPUT));
+        }
     }
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(DELAY_TIME_INPUT));
         t.turn_clockwise();
     }
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(80));
+        std::this_thread::sleep_for(std::chrono::milliseconds(DELAY_TIME_INPUT));
         counter = 0;
         t.to_bottom();
     }
-
-    //if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS);
 }
 
 

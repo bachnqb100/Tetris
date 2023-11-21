@@ -1,11 +1,13 @@
 #include <iostream>
 #include <vector>
 #include <random>
+#include <iomanip>
 
 using namespace std;
 
 const int COL = 9;
 const int ROW = 20;
+const int SCORE = 10;
 
 
 class Tetris {
@@ -14,27 +16,37 @@ public:
 		initialize();
 	}
 
-	void to_left() {
+	bool to_left() {
 		if (is_left_available()) {
 			current_position.y--;
-			cout << "x: " << current_position.x << " y: " << current_position.y << endl;
+			//cout << "x: " << current_position.x << " y: " << current_position.y << endl;
+			return true;
 		}
+		return false;
+
 	}
-	void to_right() {
+	bool to_right() {
 		if (is_right_available()) {
 			current_position.y++;			
-			cout << "x: " << current_position.x << " y: " << current_position.y << endl;
+			//cout << "x: " << current_position.x << " y: " << current_position.y << endl;
+			return true;
 		}
+		return false;
 	}
+
 	void to_bottom() {
+
 		if (is_bottom_available()) {
-			current_position.x++;			
-			cout << "x: " << current_position.x << " y: " << current_position.y << endl;
+			current_position.x++;		
+			//cout << "x: " << current_position.x << " y: " << current_position.y << endl;
+			if (check_game_over()) {
+				reset();
+			}
 		}
 		else {
 			add_to_game_table();
 			clean();
-			if (current_position.x == 0 && current_position.y == 5)
+			if (current_position.x == 0)
 				reset();
 			create_new_stone();
 
@@ -92,6 +104,8 @@ public:
 	}
 private:
 	int table[ROW + 6][COL + 6]{};
+
+	int current_score{};
 
 	struct Point {
 		Point() :x{}, y{} {}
@@ -164,13 +178,6 @@ private:
 		{
 			{
 				{0, 0, 0, 0, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 0, 1, 1, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
 				{0, 0, 0, 0, 0,},
 				{0, 1, 1, 1, 0,},
 				{0, 1, 0, 0, 0,},
@@ -188,6 +195,13 @@ private:
 				{0, 0, 0, 1, 0,},
 				{0, 1, 1, 1, 0,},
 				{0, 0, 0, 0, 0,},
+				{0, 0, 0, 0, 0,}
+			},
+			{
+				{0, 0, 0, 0, 0,},
+				{0, 0, 1, 0, 0,},
+				{0, 0, 1, 0, 0,},
+				{0, 0, 1, 1, 0,},
 				{0, 0, 0, 0, 0,}
 			}
 		};
@@ -201,12 +215,19 @@ private:
 		{
 			{
 				{0, 0, 0, 0, 0,},
+				{0, 0, 0, 0, 0,},
+				{0, 1, 1, 1, 0,},
+				{0, 0, 0, 1, 0,},
+				{0, 0, 0, 0, 0,}
+			},
+			{
+				{0, 0, 0, 0, 0,},
 				{0, 0, 1, 0, 0,},
 				{0, 0, 1, 0, 0,},
 				{0, 1, 1, 0, 0,},
 				{0, 0, 0, 0, 0,}
 			},
-			{
+{
 				{0, 0, 0, 0, 0,},
 				{0, 1, 0, 0, 0,},
 				{0, 1, 1, 1, 0,},
@@ -219,13 +240,6 @@ private:
 				{0, 0, 1, 0, 0,},
 				{0, 0, 1, 0, 0,},
 				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 0, 0, 0, 0,},
-				{0, 1, 1, 1, 0,},
-				{0, 0, 0, 1, 0,},
-				{0, 0, 0, 0, 0,}
 			}
 		};
 		Stone stone;
@@ -237,20 +251,6 @@ private:
 		{
 			{
 				{0, 0, 0, 0, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 1, 1, 1, 0,},
-				{0, 0, 0, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 0, 1, 1, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
 				{0, 0, 0, 0, 0,},
 				{0, 1, 1, 1, 0,},
 				{0, 0, 1, 0, 0,},
@@ -260,6 +260,20 @@ private:
 				{0, 0, 0, 0, 0,},
 				{0, 0, 1, 0, 0,},
 				{0, 1, 1, 0, 0,},
+				{0, 0, 1, 0, 0,},
+				{0, 0, 0, 0, 0,}
+			},
+			{
+				{0, 0, 0, 0, 0,},
+				{0, 0, 1, 0, 0,},
+				{0, 1, 1, 1, 0,},
+				{0, 0, 0, 0, 0,},
+				{0, 0, 0, 0, 0,}
+			},
+			{
+				{0, 0, 0, 0, 0,},
+				{0, 0, 1, 0, 0,},
+				{0, 0, 1, 1, 0,},
 				{0, 0, 1, 0, 0,},
 				{0, 0, 0, 0, 0,}
 			}
@@ -309,13 +323,6 @@ private:
 		{
 			{
 				{0, 0, 0, 0, 0,},
-				{0, 1, 1, 0, 0,},
-				{0, 0, 1, 1, 0,},
-				{0, 0, 0, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
 				{0, 0, 0, 1, 0,},
 				{0, 0, 1, 1, 0,},
 				{0, 0, 1, 0, 0,},
@@ -333,6 +340,13 @@ private:
 				{0, 0, 0, 1, 0,},
 				{0, 0, 1, 1, 0,},
 				{0, 0, 1, 0, 0,},
+				{0, 0, 0, 0, 0,}
+			},
+			{
+				{0, 0, 0, 0, 0,},
+				{0, 1, 1, 0, 0,},
+				{0, 0, 1, 1, 0,},
+				{0, 0, 0, 0, 0,},
 				{0, 0, 0, 0, 0,}
 			}
 		};
@@ -345,13 +359,6 @@ private:
 		{
 			{
 				{0, 0, 0, 0, 0,},
-				{0, 0, 1, 1, 0,},
-				{0, 1, 1, 0, 0,},
-				{0, 0, 0, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
 				{0, 1, 0, 0, 0,},
 				{0, 1, 1, 0, 0,},
 				{0, 0, 1, 0, 0,},
@@ -369,6 +376,13 @@ private:
 				{0, 1, 0, 0, 0,},
 				{0, 1, 1, 0, 0,},
 				{0, 0, 1, 0, 0,},
+				{0, 0, 0, 0, 0,}
+			},
+			{
+				{0, 0, 0, 0, 0,},
+				{0, 0, 1, 1, 0,},
+				{0, 1, 1, 0, 0,},
+				{0, 0, 0, 0, 0,},
 				{0, 0, 0, 0, 0,}
 			}
 		};
@@ -381,13 +395,6 @@ private:
 		{
 			{
 				{0, 0, 0, 0, 0},
-				{0, 0, 1, 0, 0},
-				{0, 0, 1, 0, 0},
-				{0, 0, 1, 0, 0},
-				{0, 0, 1, 0, 0}
-			},
-			{
-				{0, 0, 0, 0, 0},
 				{0, 0, 0, 0, 0},
 				{1, 1, 1, 1, 0},
 				{0, 0, 0, 0, 0},
@@ -406,6 +413,13 @@ private:
 				{1, 1, 1, 1, 0},
 				{0, 0, 0, 0, 0},
 				{0, 0, 0, 0, 0}
+			},
+			{
+				{0, 0, 0, 0, 0},
+				{0, 0, 1, 0, 0},
+				{0, 0, 1, 0, 0},
+				{0, 0, 1, 0, 0},
+				{0, 0, 1, 0, 0}
 			}
 		};
 		Stone stone;
@@ -440,7 +454,22 @@ private:
 			for (int j = COL + 3; j < COL + 6; j++)
 				table[i][j] = 1;
 	}
+
+	bool check_game_over() {
+		for (int i = 3; i < COL + 3; i++)
+			if (table[3][i] == 1)
+				return true;
+		return false;
+	}
+
 	void initialize() {
+
+		cout << endl;
+		cout << "===================================" << endl;
+		cout << "=====        START GAME       =====" << endl;
+		cout << "===================================" << endl;
+		cout << endl;
+
 		initialize_game_table();
 		initialize_stones();
 		create_new_stone();
@@ -509,10 +538,10 @@ private:
 	}
 
 	void clean() {
-		for (int i = 22; i > 3;) {
+		for (int i = ROW + 2; i > 3;) {
 			bool cont = true;
 
-			for (int j = 3; j < 13; j++)
+			for (int j = 3; j < COL + 3; j++)
 				if (table[i][j] == 0) {
 					cont = false;
 					i--;
@@ -520,10 +549,15 @@ private:
 				}
 
 
-			if (cont)
+			if (cont) {
 				for (int ii = i; ii > 0; ii--)
-					for (int j = 3; j < 13; j++)
+					for (int j = 3; j < COL + 3; j++) {
 						table[ii][j] = table[ii - 1][j];
+					}
+				current_score += SCORE;
+				cout << "Current score: " << current_score << endl;
+			}
+				
 
 		}
 	}
@@ -539,9 +573,30 @@ private:
 		return dist6(rng);
 	}
 	void reset() {
-		std::cout << "Game Over" << endl;
-		initialize_game_table();
-		create_new_stone();
+
+
+		cout << endl;
+		cout << "===================================" << endl;
+		cout << "=====        GAME OVER        =====" << endl;
+		cout << "=====    YOUR SCORE: " << std::setw(6) << current_score << "   =====" << endl;
+		cout << "===================================" << endl;
+		cout << endl;
+
+		cout << "Restart game(y/n)" << endl;
+
+		char userInput;
+
+		cin >> userInput;
+
+		if (userInput == 'y' || userInput == 'Y') {
+			initialize_game_table();
+			create_new_stone();
+		}
+		else {
+			cout << endl;
+			cout << "Close app" << endl;
+			cout << endl;
+		}
 	}
 
 
