@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <vector>
 #include <random>
 #include <iomanip>
@@ -8,6 +8,11 @@ using namespace std;
 const int COL = 9;
 const int ROW = 20;
 const int SCORE = 10;
+
+const int N = 5;
+
+
+
 
 
 class Tetris {
@@ -102,6 +107,7 @@ public:
 
 		return vect;
 	}
+
 private:
 	int table[ROW + 6][COL + 6]{};
 
@@ -137,33 +143,59 @@ private:
 
 	struct Stone {
 	private:
-		int state{};
-		vector<vector<vector<int>>> states;
+		vector<vector<int>> matrix{};
+
+
+		void turn_clockwise_matrix(std::vector<std::vector<int>>& matrix) {
+			// Tạo ma trận tạm thời để lưu kết quả
+			std::vector<std::vector<int>> resultMatrix(N, std::vector<int>(N, 0));
+
+			// Thực hiện phép quay
+			for (int i = 0; i < N; i++) {
+				for (int j = 0; j < N; j++) {
+					resultMatrix[j][N - i - 1] = matrix[i][j];
+				}
+			}
+
+			// Gán kết quả về ma trận ban đầu
+			matrix = resultMatrix;
+		}
+
+		void turn_counter_clockwise_matrix(std::vector<std::vector<int>>& matrix) {
+			// Tạo ma trận tạm thời để lưu kết quả
+			std::vector<std::vector<int>> resultMatrix(N, std::vector<int>(N, 0));
+
+			// Thực hiện phép quay ngược chiều kim đồng hồ
+			for (int i = 0; i < N; i++) {
+				for (int j = 0; j < N; j++) {
+					resultMatrix[N - j - 1][i] = matrix[i][j];
+				}
+			}
+
+			// Gán kết quả về ma trận ban đầu
+			matrix = resultMatrix;
+		}
 	public:
 		void turn_clockwise() {
-			state++;
-			if (state == 4)
-				state = 0;
+			turn_clockwise_matrix(matrix);
 		}
 		void turn_counterclockwise() {
-			state--;
-			if (state == -1)
-				state = 3;
+			turn_counter_clockwise_matrix(matrix);
 		}
 
 		bool is_collide(vector<vector<int>> view) {
 			for (int i = 0; i < 5; i++)
 				for (int j = 0; j < 5; j++)
-					if (view[i][j] == 1 && states[state][i][j] == 1)
+					if (view[i][j] == 1 && matrix[i][j] == 1)
 						return true;
 			return false;
 		}
 		vector<vector<int>> get_current_state() {
-			return states[state];
+			return matrix;
 		}
 
-		void set_states(vector<vector<vector<int>>> states) {
-			this->states = states;
+		void set_states(vector<vector<int>> states) {
+			this->matrix = states;
 		}
 	};
 
@@ -174,36 +206,12 @@ private:
 
 
 	void initialize_L_stone() {
-		vector<vector<vector<int>>> vect
-		{
-			{
-				{0, 0, 0, 0, 0,},
+		vector<vector<int>> vect
+		{		{0, 0, 0, 0, 0,},
 				{0, 0, 0, 0, 0,},
 				{0, 1, 1, 1, 0,},
 				{0, 1, 0, 0, 0,},
 				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 1, 1, 0, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 0, 0, 1, 0,},
-				{0, 1, 1, 1, 0,},
-				{0, 0, 0, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 0, 1, 1, 0,},
-				{0, 0, 0, 0, 0,}
-			}
 		};
 		Stone stone;
 		stone.set_states(vect);
@@ -211,216 +219,84 @@ private:
 		stones.push_back(stone);
 	}
 	void initialize_op_L_stone() {
-		vector<vector<vector<int>>> vect
+		vector<vector<int>> vect
 		{
-			{
 				{0, 0, 0, 0, 0,},
 				{0, 0, 0, 0, 0,},
 				{0, 1, 1, 1, 0,},
 				{0, 0, 0, 1, 0,},
 				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 1, 1, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-{
-				{0, 0, 0, 0, 0,},
-				{0, 1, 0, 0, 0,},
-				{0, 1, 1, 1, 0,},
-				{0, 0, 0, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 0, 1, 1, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			}
+
 		};
 		Stone stone;
 		stone.set_states(vect);
 		stones.push_back(stone);
 	}
 	void initialize_tri_stone() {
-		vector<vector<vector<int>>> vect
+		vector<vector<int>> vect
 		{
-			{
 				{0, 0, 0, 0, 0,},
 				{0, 0, 0, 0, 0,},
 				{0, 1, 1, 1, 0,},
 				{0, 0, 1, 0, 0,},
 				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 1, 1, 0, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 1, 1, 1, 0,},
-				{0, 0, 0, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 0, 1, 1, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			}
+
 		};
 		Stone stone;
 		stone.set_states(vect);
 		stones.push_back(stone);
 	}
 	void initialize_quad_stone() {
-		vector<vector<vector<int>>> vect
+		vector<vector<int>> vect
 		{
-			{
 				{0, 0, 0, 0, 0,},
 				{0, 1, 1, 0, 0,},
 				{0, 1, 1, 0, 0,},
 				{0, 0, 0, 0, 0,},
 				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 1, 1, 0, 0,},
-				{0, 1, 1, 0, 0,},
-				{0, 0, 0, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 1, 1, 0, 0,},
-				{0, 1, 1, 0, 0,},
-				{0, 0, 0, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 1, 1, 0, 0,},
-				{0, 1, 1, 0, 0,},
-				{0, 0, 0, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			}
+
 		};
 		Stone stone;
 		stone.set_states(vect);
 		stones.push_back(stone);
 	}
 	void initialize_Z_stone() {
-		vector<vector<vector<int>>> vect
+		vector<vector<int>> vect
 		{
-			{
 				{0, 0, 0, 0, 0,},
 				{0, 0, 0, 1, 0,},
 				{0, 0, 1, 1, 0,},
 				{0, 0, 1, 0, 0,},
 				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 1, 1, 0, 0,},
-				{0, 0, 1, 1, 0,},
-				{0, 0, 0, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 0, 0, 1, 0,},
-				{0, 0, 1, 1, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 1, 1, 0, 0,},
-				{0, 0, 1, 1, 0,},
-				{0, 0, 0, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			}
+	
 		};
 		Stone stone;
 		stone.set_states(vect);
 		stones.push_back(stone);
 	}
 	void initialize_op_Z_stone() {
-		vector<vector<vector<int>>> vect
+		vector<vector<int>> vect
 		{
-			{
 				{0, 0, 0, 0, 0,},
 				{0, 1, 0, 0, 0,},
 				{0, 1, 1, 0, 0,},
 				{0, 0, 1, 0, 0,},
 				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 0, 1, 1, 0,},
-				{0, 1, 1, 0, 0,},
-				{0, 0, 0, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 1, 0, 0, 0,},
-				{0, 1, 1, 0, 0,},
-				{0, 0, 1, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			},
-			{
-				{0, 0, 0, 0, 0,},
-				{0, 0, 1, 1, 0,},
-				{0, 1, 1, 0, 0,},
-				{0, 0, 0, 0, 0,},
-				{0, 0, 0, 0, 0,}
-			}
+
 		};
 		Stone stone;
 		stone.set_states(vect);
 		stones.push_back(stone);
 	}
 	void initialize_I_stone() {
-		vector<vector<vector<int>>> vect
+		vector<vector<int>> vect
 		{
-			{
 				{0, 0, 0, 0, 0},
 				{0, 0, 0, 0, 0},
 				{1, 1, 1, 1, 0},
 				{0, 0, 0, 0, 0},
 				{0, 0, 0, 0, 0}
-			},
-			{
-				{0, 0, 0, 0, 0},
-				{0, 0, 1, 0, 0},
-				{0, 0, 1, 0, 0},
-				{0, 0, 1, 0, 0},
-				{0, 0, 1, 0, 0}
-			},
-			{
-				{0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0},
-				{1, 1, 1, 1, 0},
-				{0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0}
-			},
-			{
-				{0, 0, 0, 0, 0},
-				{0, 0, 1, 0, 0},
-				{0, 0, 1, 0, 0},
-				{0, 0, 1, 0, 0},
-				{0, 0, 1, 0, 0}
-			}
+
 		};
 		Stone stone;
 		stone.set_states(vect);
